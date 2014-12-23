@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+
+/webapp/WEB-INF/target/
+/webapp/WEB-INF/classes/
+
+a_little_config_pro.txt
+

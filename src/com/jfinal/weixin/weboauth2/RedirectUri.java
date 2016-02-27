@@ -90,7 +90,7 @@ System.out.println(jsonObject.toString());
 		try {
 			String url="https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect";
 			String appid=getApiConfig().getAppId();
-			String redirect_uri=URLEncoder.encode("http://javen.ngrok.natapp.cn/oauth2", "utf-8");
+			String redirect_uri=URLEncoder.encode(PropKit.get("domain")+"/oauth2", "utf-8");
 			String state="1";
 			String scope="snsapi_userinfo";//snsapi_base
 			url=url.replace("APPID", appid);

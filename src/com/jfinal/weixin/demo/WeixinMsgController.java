@@ -49,6 +49,8 @@ import com.jfinal.weixin.service.BaiduAmbitus;
 import com.jfinal.weixin.service.BaiduTranslate;
 import com.jfinal.weixin.service.BaiduWeatherService;
 import com.jfinal.weixin.service.GongjiaoLineService;
+import com.jfinal.weixin.service.IdService;
+import com.jfinal.weixin.service.PhoneService;
 import com.jfinal.weixin.template.DataItem;
 import com.jfinal.weixin.template.TempItem;
 import com.jfinal.weixin.template.TempToJson;
@@ -66,10 +68,16 @@ public class WeixinMsgController extends MsgControllerAdapter {
 	public String Regex = "[\\+ ~!@#%^-_=]?";
 	static Log logger = Log.getLog(WeixinMsgController.class);
 	private static final String helpStr = "么么哒  美女等你好久了哦!! \n\n\t发送 help 可获得帮助，发送 \"美女\" 可看美女，发送 music 可听音乐 。\n\n"
-			+ "1、人脸识别" + "\n" + "2、在线翻译" + "\n" + "3、天气查询" + "\n" 
+			+ "1、人脸识别" + "\n" 
+			+ "2、在线翻译" + "\n" 
+			+ "3、天气查询" + "\n" 
 			+ "4、公交查询" + "\n" 
-			+ "7、附近查询" + "\n" + "8、开发者模式" + "\n"
-			+ "9、QQ咨询" + "\n\n" + "10、获取资料密码" + "\n\n"
+			+ "5、手机归属地查询" + "\n" 
+			+ "6、身份证查询" + "\n" 
+			+ "7、附近查询" + "\n" 
+			+ "8、开发者模式" + "\n"
+			+ "9、QQ咨询" + "\n\n" 
+			+ "10、获取资料密码" + "\n\n"
 
 			+ "公众号功能持续完善中\n\n"
 			+ "微信交流群：<a href=\"http://shang.qq.com/wpa/qunwpa?idkey=7f176ad0cd979c3a7e6ceeab0207a5bfc39ddcf0ad8b3552696e09f04867b245\">114196246</a>\n\n"
@@ -150,7 +158,25 @@ public class WeixinMsgController extends MsgControllerAdapter {
 			msgContent = GongjiaoLineService.getGuide();
 			renderOutTextMsg(msgContent);
 
-		} else if (msgContent.startsWith("公交")) {
+		}else if (msgContent.equals("5") || msgContent.equals("手机归属地查询")) {
+			msgContent = PhoneService.getGuide();
+			renderOutTextMsg(msgContent);
+
+		} else if (msgContent.startsWith("归属地") || msgContent.contains("归属地@")) {
+			msgContent=msgContent.replaceAll("^归属地"+Regex,"");
+			msgContent = PhoneService.getPhoneInfo(msgContent);
+			renderOutTextMsg(msgContent);
+
+		} else if (msgContent.equals("6") || msgContent.equals("身份证查询")) {
+			msgContent = IdService.getGuide();
+			renderOutTextMsg(msgContent);
+
+		} else if (msgContent.startsWith("身份证") || msgContent.contains("身份证@")) {
+			msgContent=msgContent.replaceAll("^身份证"+Regex,"");
+			msgContent = IdService.getIdInfo(msgContent);
+			renderOutTextMsg(msgContent);
+
+		}  else if (msgContent.startsWith("公交")) {
 			msgContent = GongjiaoLineService.Transit(msgContent);
 			renderOutTextMsg(msgContent);
 		}else if (msgContent.equals("7") ||msgContent.startsWith("附近")) {
@@ -185,11 +211,11 @@ public class WeixinMsgController extends MsgControllerAdapter {
 			String content="ngrok下载链接:http://pan.baidu.com/s/1dD99kGD 密码:jeyj";
 			renderOutTextMsg(content);
 		}else if ("授权".equalsIgnoreCase(msgContent)) {
-			String url="http://javen.ngrok.natapp.cn/oauth2/oauth";
+			String url=PropKit.get("domain")+"/oauth2/oauth";
 			String urlStr="<a href=\""+url+"\">点击我授权</a>";
 			renderOutTextMsg("授权地址"+urlStr);
 		}else if ("jssdk".equalsIgnoreCase(msgContent)) {
-			String url="http://javen.ngrok.natapp.cn/jssdk";
+			String url=PropKit.get("domain")+"/jssdk";
 			String urlStr="<a href=\""+url+"\">JSSDK</a>";
 			renderOutTextMsg("地址"+urlStr);
 		}

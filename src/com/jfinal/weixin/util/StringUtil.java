@@ -1,6 +1,5 @@
 package com.jfinal.weixin.util;
 
-
 public class StringUtil {  
 	/** 
      * @方法名 translate 
@@ -46,11 +45,6 @@ public class StringUtil {
         }  
         return result;  
     }  
+   
     
-    
-//    public static boolean isNull(String str) {  
-//        if (null == str || "".equals(str.trim()))  
-//            return true;  
-//        return false;  
-//    }  
 }

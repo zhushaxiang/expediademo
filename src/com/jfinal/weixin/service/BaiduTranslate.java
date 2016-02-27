@@ -1,11 +1,15 @@
 package com.jfinal.weixin.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Random;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.jfinal.kit.HttpKit;
+import com.jfinal.kit.HashKit;
+import com.jfinal.kit.PropKit;
+import com.jfinal.kit.StrKit;
+import com.jfinal.weixin.sdk.utils.HttpUtils;
 
 /**
  * @author Javen
@@ -15,19 +19,28 @@ public class BaiduTranslate {
 	public static String Regex = "[\\+ ~!@#%^-_=]?";
 	static String transArray[][]={{"zh","en"},{"zh","jp"},{"zh","kor"},{"zh","ru"},{"zh","yue"},{"en","zh"},{"jp","zh"}};
 	private static  String BaiduTranslates(String q,String from,String to) {
-		if (from==null || to==null || from.trim().equals("") ||to.trim().equals("")) {
+		if (StrKit.isBlank(from) || StrKit.isBlank(to)) {
 			from="auto";
 			to="auto";
 		}
-		String client_id = "w5CHR6GMqwCkcTx8l4DqTWls";
-		String url = "http://openapi.baidu.com/public/2.0/bmt/translate?client_id="
-				+ client_id
-				+ "&q="
-				+ urlEncodeUTF8(q)
-				+ "&from="+from+"&to="+to;
+		int salt=new Random().nextInt(100000);
+		
+		String query=urlEncodeUTF8(q);
+		String appid = PropKit.get("bt_appId");
+		String appkey = PropKit.get("bt_appKey");
+		System.out.println(q+ " "+query);
+		String sign=HashKit.md5(appid+q+salt+appkey);
+		System.out.println(sign);
+		String url = "http://api.fanyi.baidu.com/api/trans/vip/translate?appid="
+				+ appid
+				+ "&q="+ query
+				+ "&from="+from
+				+"&to="+to
+				+"&salt="+salt
+				+"&sign="+sign;
+		
 
-		//return HttpUtil.getUrl(url);
-		return HttpKit.get(url);
+		return HttpUtils.get(url);
 	}
 
 	public static String Translates(String content) {
@@ -49,55 +62,52 @@ public class BaiduTranslate {
 
 					JSONObject jsonObject = JSON.parseObject(translateJsonStr);
 					System.out.println(jsonObject.toString());
-					
-//					JSONArray translateResultJsonArray = JSONArray
-//							.fromObject(jsonObject.get("trans_result"));
-					
-					
-					JSONArray translateResultJsonArray=jsonObject.getJSONArray("trans_result");
+					String error_code=jsonObject.getString("error_code");
+					if (StrKit.isBlank(error_code)) {
+						JSONArray translateResultJsonArray=jsonObject.getJSONArray("trans_result");
 
-					String fromLanguage = null;
-					String toLanguage = null;
+						String fromLanguage = null;
+						String toLanguage = null;
 
-					if (jsonObject.get("from").toString().equals("zh")) {
-						fromLanguage = "\ue513汉";
-					} else if (jsonObject.get("from").toString().equals("en")) {
-						fromLanguage = "\ue50c英";
-					} else if (jsonObject.get("from").toString().equals("jp")) {
-						fromLanguage = "\ue50b日";
+						if (jsonObject.get("from").toString().equals("zh")) {
+							fromLanguage = "\ue513汉";
+						} else if (jsonObject.get("from").toString().equals("en")) {
+							fromLanguage = "\ue50c英";
+						} else if (jsonObject.get("from").toString().equals("jp")) {
+							fromLanguage = "\ue50b日";
+						}
+
+						if (jsonObject.get("to").toString().equals("zh")) {
+							toLanguage = "\ue513汉";
+						} else if (jsonObject.get("to").toString().equals("en")) {
+							toLanguage = "\ue50c英";
+						} else if (jsonObject.get("to").toString().equals("jp")) {
+							toLanguage = "\ue50b日";
+						}else if (jsonObject.get("to").toString().equals("kor")) {
+							toLanguage = "\ue514韩";
+						}else if (jsonObject.get("to").toString().equals("ru")) {
+							toLanguage = "\ue512俄罗斯语";
+						}else if (jsonObject.get("to").toString().equals("yue")) {
+							toLanguage = "粤语";
+						}
+
+						result = "\ue132翻译成功！\n"
+								+ fromLanguage
+								+ "译"
+								+ toLanguage
+								+ " : \n"
+								+ translateResultJsonArray.getJSONObject(0).get("src")
+										.toString()
+								+ "\n"
+								+ translateResultJsonArray.getJSONObject(0).get("dst")
+										.toString();
+					}else {
+						result="翻译出现异常。";
 					}
-
-					if (jsonObject.get("to").toString().equals("zh")) {
-						toLanguage = "\ue513汉";
-					} else if (jsonObject.get("to").toString().equals("en")) {
-						toLanguage = "\ue50c英";
-					} else if (jsonObject.get("to").toString().equals("jp")) {
-						toLanguage = "\ue50b日";
-					}else if (jsonObject.get("to").toString().equals("kor")) {
-						toLanguage = "\ue514韩";
-					}else if (jsonObject.get("to").toString().equals("ru")) {
-						toLanguage = "\ue512俄罗斯语";
-					}else if (jsonObject.get("to").toString().equals("yue")) {
-						toLanguage = "粤语";
-					}
-
-					result = "\ue132翻译成功！\n"
-							+ fromLanguage
-							+ "译"
-							+ toLanguage
-							+ " : \n"
-							+ translateResultJsonArray.getJSONObject(0).get("src")
-									.toString()
-							+ "\n"
-							+ translateResultJsonArray.getJSONObject(0).get("dst")
-									.toString();
 				} else {
-					result = "无法翻译您所输入的内容！\n"
-							+ "请您确认需要翻译的内容，并以\"翻译\"+\"内容\"的格式输入, 如 翻译你好 or 翻译+你好";
+					result = "无法翻译您所输入的内容！\n"+ getGuide();
 				}
 			}
-			
-			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,7 +151,7 @@ public class BaiduTranslate {
 		
 	}
 	public static void main(String[] args) {
-		System.out.println(Translates("翻译3@我爱你"));
+		System.out.println(Translates("翻译2@我爱你"));
 	}
 
 }

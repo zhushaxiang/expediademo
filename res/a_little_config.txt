@@ -14,4 +14,13 @@ appSecret=yourAppSecret
 #encryptMessage=true
 #encodingAesKey=yourEncodingAesKey
 
+#####业务逻辑中的华丽的分割线#########
+#授权域名
+domain=xxxx
+#百度翻译 http://api.fanyi.baidu.com/api/trans/product/index
+bt_appId=xxxx
+bt_appKey=xxxx
+#百度http://apistore.baidu.com/
+apiKey=xxxx
+
 

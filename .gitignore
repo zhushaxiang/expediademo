@@ -1,14 +1,32 @@
-*.class
+# maven #
+target
+
+# eclipse #
+.settings
+.project
+.classpath
+*.log
+
+# windows #
+Thumbs.db
+
+# Mac #
+.DS_Store
 
 # Package Files #
 *.jar
 *.war
 *.ear
 
-/webapp/WEB-INF/target/
-/webapp/WEB-INF/classes/
-
-a_little_config_pro.txt
-
-.idea/
+# idea #
+.idea
 *.iml
+*.ipr
+*.iws
+
+logs
+*.class
+*.bak
+*.tmp
+
+plan.txt

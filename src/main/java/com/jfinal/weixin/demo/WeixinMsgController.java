@@ -21,8 +21,6 @@ import com.jfinal.weixin.semantic.SearchObject;
 import com.jfinal.weixin.service.*;
 import com.jfinal.weixin.util.WeixinUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -211,23 +209,25 @@ public class WeixinMsgController extends MsgControllerAdapter {
 		} else if ("视频教程".equalsIgnoreCase(msgContent) || "视频".equalsIgnoreCase(msgContent)) {
 			renderOutTextMsg("\thttp://pan.baidu.com/s/1nt2zAT7  \t密码:824r");
 		}	else if ("模板消息".equalsIgnoreCase(msgContent)) {
-			
-			DataItem dataItem=new DataItem();
-			dataItem.setFirst(new TempItem("您好,Javen,欢迎使用模版消息!!", "#743A3A"));
-			dataItem.setProduct(new TempItem("微信公众平台测试", "#FF0000"));
-			dataItem.setPrice(new TempItem("39.8元", "#c4c400"));
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日  HH时mm分ss秒");
-			String time=sdf.format(new Date());
-			dataItem.setTime(new TempItem(time, "#0000FF"));
-			dataItem.setRemark(new TempItem("您的订单已提交，我们将尽快发货，祝生活愉快! 点击可以查看详细信息", "#008000"));
-			
-			String jsonStr=TempToJson.getTempJson(inTextMsg.getFromUserName(), "tz1w-1fSN_Rzgj9_PjYuLU1EujvjPbtr1LL-_NtO6IM",
-					"#743A3A", "http://img2.3lian.com/2014/f5/158/d/86.jpg", dataItem);
-			System.out.println(inTextMsg.getToUserName()+" "+inTextMsg.getFromUserName());
-			 ApiResult result=TemplateMsgApi.send(jsonStr);
+
+			ApiResult result = TemplateMsgApi.send(TemplateData.New()
+					// 消息接收者
+					.setTouser(inTextMsg.getFromUserName())
+					// 模板id
+					.setTemplate_id("tz1w-1fSN_Rzgj9_PjYuLU1EujvjPbtr1LL-_NtO6IM")
+					.setTopcolor("#743A3A")
+					.setUrl("http://img2.3lian.com/2014/f5/158/d/86.jpg")
+
+					// 模板参数
+					.add("first", "您好,Javen,欢迎使用模版消息!!\n", "#999")
+					.add("keyword1", "微信公众平台测试", "#999")
+					.add("keyword2", "39.8元", "#999")
+					.add("keyword3", "yyyy年MM月dd日 HH时mm分ss秒", "#999")
+					.add("remark", "\n您的订单已提交，我们将尽快发货，祝生活愉快! 点击可以查看详细信息。", "#999")
+					.build());
+
 			 System.out.println(result.getJson());
 			 renderNull();
-			
 		}else if (msgContent.startsWith("百科")) {
 			msgContent=msgContent.replaceAll("^百科"+Regex,"");
 			SearchObject searchObject=new SearchObject();

@@ -30,5 +30,3 @@ logs
 *.tmp
 
 plan.txt
-jfinal_weixin.log
-src/main/

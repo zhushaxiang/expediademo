@@ -22,7 +22,4 @@ public class UserConfig {
 	public void setLang(LangType langType ) {
 		this.lang = langType.name();
 	}
-	
-	
-	
 }

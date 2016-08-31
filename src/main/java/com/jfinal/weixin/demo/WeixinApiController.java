@@ -6,17 +6,9 @@
 package com.jfinal.weixin.demo;
 
 import com.jfinal.kit.HashKit;
-import com.jfinal.kit.PropKit;
-import com.jfinal.weixin.sdk.api.ApiConfig;
-import com.jfinal.weixin.sdk.api.ApiResult;
-import com.jfinal.weixin.sdk.api.CallbackIpApi;
-import com.jfinal.weixin.sdk.api.CustomServiceApi;
-import com.jfinal.weixin.sdk.api.MenuApi;
-import com.jfinal.weixin.sdk.api.QrcodeApi;
-import com.jfinal.weixin.sdk.api.ShorturlApi;
-import com.jfinal.weixin.sdk.api.TemplateMsgApi;
-import com.jfinal.weixin.sdk.api.UserApi;
+import com.jfinal.weixin.sdk.api.*;
 import com.jfinal.weixin.sdk.jfinal.ApiController;
+import com.jfinal.weixin.util.WeixinUtil;
 
 public class WeixinApiController extends ApiController {
 	
@@ -25,21 +17,7 @@ public class WeixinApiController extends ApiController {
 	 * 可以通过在请求 url 中挂参数来动态从数据库中获取 ApiConfig 属性值
 	 */
 	public ApiConfig getApiConfig() {
-		ApiConfig ac = new ApiConfig();
-		
-		// 配置微信 API 相关常量
-		ac.setToken(PropKit.get("token"));
-		ac.setAppId(PropKit.get("appId"));
-		ac.setAppSecret(PropKit.get("appSecret"));
-		
-		/**
-		 *  是否对消息进行加密，对应于微信平台的消息加解密方式：
-		 *  1：true进行加密且必须配置 encodingAesKey
-		 *  2：false采用明文模式，同时也支持混合模式
-		 */
-		ac.setEncryptMessage(PropKit.getBoolean("encryptMessage", false));
-		ac.setEncodingAesKey(PropKit.get("encodingAesKey", "setting it in config file"));
-		return ac;
+		return WeixinUtil.getApiConfig();
 	}
 
 	/**
@@ -168,9 +146,8 @@ public class WeixinApiController extends ApiController {
 	 */
 	public void getShorturl()
 	{
-		String str = "{\"action\":\"long2short\"," +
-				"\"long_url\":\"http://wap.koudaitong.com/v2/showcase/goods?alias=128wi9shh&spm=h56083&redirect_count=1\"}";
-		ApiResult apiResult = ShorturlApi.getShorturl(str);
+		String str = "http://wap.koudaitong.com/v2/showcase/goods?alias=128wi9shh&spm=h56083&redirect_count=1";
+		ApiResult apiResult = ShorturlApi.getShortUrl(str);
 		renderText(apiResult.getJson());
 	}
 

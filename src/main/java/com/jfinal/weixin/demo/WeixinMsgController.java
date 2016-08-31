@@ -6,55 +6,24 @@
 
 package com.jfinal.weixin.demo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import com.jfinal.course.face.FaceService;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.log.Log;
-import com.jfinal.weixin.sdk.api.ApiConfig;
-import com.jfinal.weixin.sdk.api.ApiConfigKit;
-import com.jfinal.weixin.sdk.api.ApiResult;
-import com.jfinal.weixin.sdk.api.SemanticApi;
-import com.jfinal.weixin.sdk.api.TemplateMsgApi;
+import com.jfinal.weixin.sdk.api.*;
 import com.jfinal.weixin.sdk.jfinal.MsgControllerAdapter;
-import com.jfinal.weixin.sdk.msg.in.InImageMsg;
-import com.jfinal.weixin.sdk.msg.in.InLinkMsg;
-import com.jfinal.weixin.sdk.msg.in.InLocationMsg;
-import com.jfinal.weixin.sdk.msg.in.InShortVideoMsg;
-import com.jfinal.weixin.sdk.msg.in.InTextMsg;
-import com.jfinal.weixin.sdk.msg.in.InVideoMsg;
-import com.jfinal.weixin.sdk.msg.in.InVoiceMsg;
-import com.jfinal.weixin.sdk.msg.in.event.InCustomEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InFollowEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InLocationEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InMassEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InMenuEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InQrCodeEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InShakearoundUserShakeEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InTemplateMsgEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InVerifyFailEvent;
-import com.jfinal.weixin.sdk.msg.in.event.InVerifySuccessEvent;
+import com.jfinal.weixin.sdk.msg.in.*;
+import com.jfinal.weixin.sdk.msg.in.event.*;
 import com.jfinal.weixin.sdk.msg.in.speech_recognition.InSpeechRecognitionResults;
-import com.jfinal.weixin.sdk.msg.out.News;
-import com.jfinal.weixin.sdk.msg.out.OutMusicMsg;
-import com.jfinal.weixin.sdk.msg.out.OutNewsMsg;
-import com.jfinal.weixin.sdk.msg.out.OutTextMsg;
-import com.jfinal.weixin.sdk.msg.out.OutVoiceMsg;
+import com.jfinal.weixin.sdk.msg.out.*;
 import com.jfinal.weixin.sdk.utils.JsonUtils;
 import com.jfinal.weixin.semantic.SearchObject;
-import com.jfinal.weixin.service.BaiduAmbitus;
-import com.jfinal.weixin.service.BaiduTranslate;
-import com.jfinal.weixin.service.BaiduWeatherService;
-import com.jfinal.weixin.service.GongjiaoLineService;
-import com.jfinal.weixin.service.IdService;
-import com.jfinal.weixin.service.PhoneService;
-import com.jfinal.weixin.template.DataItem;
-import com.jfinal.weixin.template.TempItem;
-import com.jfinal.weixin.template.TempToJson;
+import com.jfinal.weixin.service.*;
 import com.jfinal.weixin.util.WeixinUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 将此 DemoController 在YourJFinalConfig 中注册路由， 并设置好weixin开发者中心的 URL 与 token ，使
@@ -89,20 +58,7 @@ public class WeixinMsgController extends MsgControllerAdapter {
 	 * ApiConfig 属性值
 	 */
 	public ApiConfig getApiConfig() {
-		ApiConfig ac = new ApiConfig();
-
-		// 配置微信 API 相关常量
-		ac.setToken(PropKit.get("token"));
-		ac.setAppId(PropKit.get("appId"));
-		ac.setAppSecret(PropKit.get("appSecret"));
-
-		/**
-		 * 是否对消息进行加密，对应于微信平台的消息加解密方式： 1：true进行加密且必须配置 encodingAesKey
-		 * 2：false采用明文模式，同时也支持混合模式
-		 */
-		ac.setEncryptMessage(PropKit.getBoolean("encryptMessage", false));
-		ac.setEncodingAesKey(PropKit.get("encodingAesKey", "setting it in config file"));
-		return ac;
+		return WeixinUtil.getApiConfig();
 	}
 
 	/**

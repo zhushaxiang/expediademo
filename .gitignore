@@ -2,9 +2,9 @@
 target
 
 # eclipse #
-#.settings
-#.project
-#.classpath
+.settings
+.project
+.classpath
 *.log
 
 # windows #

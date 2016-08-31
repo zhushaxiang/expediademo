@@ -2,9 +2,9 @@
 target
 
 # eclipse #
-.settings
-.project
-.classpath
+#.settings
+#.project
+#.classpath
 *.log
 
 # windows #
@@ -30,3 +30,5 @@ logs
 *.tmp
 
 plan.txt
+jfinal_weixin.log
+src/main/

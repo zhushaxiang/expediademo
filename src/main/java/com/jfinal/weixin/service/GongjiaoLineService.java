@@ -5,8 +5,6 @@ import com.jfinal.weixin.sdk.utils.HttpUtils;
 import com.jfinal.weixin.sdk.utils.XmlHelper;
 import com.jfinal.weixin.util.WeixinUtil;
 
-import java.io.UnsupportedEncodingException;
-
 public class GongjiaoLineService {
   /**
     * 爱帮公交线路查询
@@ -19,8 +17,8 @@ public class GongjiaoLineService {
     // 爱帮api地址
     String requestUrl = "http://openapi.aibang.com/bus/lines?app_key=b7fb1e41aa104e9c24b81894d8e5ab48&city={city}&q={q}";
     // 对城市和线路进行编码
-    requestUrl = requestUrl.replace("{city}", urlEncodeUTF8(city));
-    requestUrl = requestUrl.replace("{q}", urlEncodeUTF8(q));
+    requestUrl = requestUrl.replace("{city}", WeixinUtil.urlEncodeUTF8(city));
+    requestUrl = requestUrl.replace("{q}", WeixinUtil.urlEncodeUTF8(q));
     // 处理名称、作者中间的空格
     requestUrl = requestUrl.replaceAll("\\+", "%20");
     // 查询并获取返回结果
@@ -29,22 +27,7 @@ public class GongjiaoLineService {
     GongjiaoLine gj = parseGongjiao(xml);
     return gj;
   }
-  /**
-    * UTF-8编码
-    *
-    * @param source
-    * @return
-    */
-  private static String urlEncodeUTF8(String source) {
-    String result = source;
-    try {
-      result = java.net.URLEncoder.encode(source, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-    }
-    return result;
-  }
-  
+
   private static GongjiaoLine parseGongjiao(String xml) {
       XmlHelper xmlHelper = XmlHelper.of(xml);
       String num = xmlHelper.getString("//result_num");

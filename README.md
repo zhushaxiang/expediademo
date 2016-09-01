@@ -33,3 +33,8 @@ appId 与 appSecret 需要在微信平台上获取
  * </ol>
  */
 ```
+
+## 使用文档
+文档WIKI: http://git.oschina.net/jfinal/jfinal-weixin/wikis/home
+
+JavaDoc：http://www.dreamlu.net/jfinal-weixin/apidocs/

@@ -12,7 +12,4 @@ public class GetUserInfo {
 		this.user_list = user_list;
 	}
 
-	
-	
-	
 }

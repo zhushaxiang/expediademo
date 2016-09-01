@@ -1,15 +1,16 @@
 package com.jfinal.weixin.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import com.jfinal.weixin.entity.GongjiaoBus;
 import com.jfinal.weixin.entity.Segment;
 import com.jfinal.weixin.sdk.utils.HttpUtils;
 import com.jfinal.weixin.sdk.utils.XmlHelper;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+import com.jfinal.weixin.util.WeixinUtil;
 
 /**
  * @author Javen
@@ -20,9 +21,9 @@ public class GongjiaoBusService {
 	private static List<GongjiaoBus> getGongjiaoBus(String city,String start_addr,String end_addr){
 		String requestUrl = "http://openapi.aibang.com/bus/transfer?app_key=0a64bf2d8ee2248700e8bc32e6aaa3fe&city={city}&start_addr={start_addr}&end_addr={end_addr}";
 	    // 对城市和线路进行编码
-	    requestUrl = requestUrl.replace("{city}", urlEncodeUTF8(city));
-	    requestUrl = requestUrl.replace("{start_addr}", urlEncodeUTF8(start_addr));
-	    requestUrl = requestUrl.replace("{end_addr}", urlEncodeUTF8(end_addr));
+	    requestUrl = requestUrl.replace("{city}", WeixinUtil.urlEncodeUTF8(city));
+	    requestUrl = requestUrl.replace("{start_addr}", WeixinUtil.urlEncodeUTF8(start_addr));
+	    requestUrl = requestUrl.replace("{end_addr}", WeixinUtil.urlEncodeUTF8(end_addr));
 	    // 处理名称、作者中间的空格
 	    requestUrl = requestUrl.replaceAll("\\+", "%20");
 	    System.out.println(requestUrl);
@@ -100,22 +101,6 @@ public class GongjiaoBusService {
 		return null;
 		
 	}
-	
-	/**
-	    * UTF-8编码
-	    *
-	    * @param source
-	    * @return
-	    */
-	  public static String urlEncodeUTF8(String source) {
-	    String result = source;
-	    try {
-	      result = java.net.URLEncoder.encode(source, "UTF-8");
-	    } catch (UnsupportedEncodingException e) {
-	      e.printStackTrace();
-	    }
-	    return result;
-	  }
 	
 	public static void main(String[] args) {
 		List<GongjiaoBus> list = getGongjiaoBus("深圳", "油松派出所", "深圳北站");

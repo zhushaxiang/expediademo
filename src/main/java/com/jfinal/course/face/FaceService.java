@@ -1,18 +1,14 @@
 package com.jfinal.course.face;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.weixin.sdk.utils.HttpUtils;
 import com.jfinal.weixin.util.WeixinUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -20,41 +16,6 @@ import com.jfinal.weixin.util.WeixinUtil;
  * 
  */
 public class FaceService {
-	/**
-	 * 发送http请求
-	 * 
-	 * @param requestUrl 请求地址
-	 * @return String
-	 */
-	private static String httpRequest(String requestUrl) {
-		StringBuffer buffer = new StringBuffer();
-		try {
-			URL url = new URL(requestUrl);
-			HttpURLConnection httpUrlConn = (HttpURLConnection) url.openConnection();
-			httpUrlConn.setDoInput(true);
-			httpUrlConn.setRequestMethod("GET");
-			httpUrlConn.connect();
-			// 将返回的输入流转换成字符串
-			InputStream inputStream = httpUrlConn.getInputStream();
-			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-			String str = null;
-			while ((str = bufferedReader.readLine()) != null) {
-				buffer.append(str);
-			}
-			bufferedReader.close();
-			inputStreamReader.close();
-			// 释放资源
-			inputStream.close();
-			inputStream = null;
-			httpUrlConn.disconnect();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return buffer.toString();
-	}
 
 	/**
 	 * 调用Face++ API实现人脸检测
@@ -72,12 +33,12 @@ public class FaceService {
 			queryUrl = queryUrl.replace("API_KEY", "8402de962c125479f436870040000f1a");//Face++开发者平台申请的API_KEY
 			queryUrl = queryUrl.replace("API_SECRET", "FYRww9laaww1zmGc3klJTmZ8pFNADnDB");//Face++开发者平台申请的API_SECRET
 			// 调用人脸检测接口
-			String json = httpRequest(queryUrl);
-//			System.out.println(json);
+			String json = HttpUtils.get(queryUrl);
+			System.out.println(json);
 			// 解析返回json中的Face列表
 			
 			JSONArray jsonArray = JSON.parseObject(json).getJSONArray("face");
-			// 遍历检测到的人脸
+			// 遍历测到的人脸
 			for (int i = 0; i < jsonArray.size(); i++) {
 				// face
 				JSONObject faceObject = (JSONObject) jsonArray.get(i);
@@ -219,7 +180,6 @@ public class FaceService {
 			try {
 				result = makeMessage(faceList);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

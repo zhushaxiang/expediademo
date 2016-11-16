@@ -27,6 +27,9 @@
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script type="text/javascript">
         $(function(){
+            if($.trim($('#registed').text())=="true"){
+                back();
+            }
             var $iosDialog = $('#iosDialog');
             $('#dialogs').on('click', '.weui-dialog__btn', function(){
                 $(this).parents('.js_dialog').fadeOut(200);
@@ -43,7 +46,7 @@
                     setTimeout(function () {
                         $loadingToast.fadeOut(100);
 
-                        if($.trim($('#username').val())=="name"){
+                        if($.trim($('#username').val())=="admin"){
                             SendData(back());
                         }else{
                             $('#errorMessage span').show(500);
@@ -65,10 +68,11 @@
 
         function SendData(_success) {
             var user=new Object;
-            user.name="name";
-            user.pwd="pwd";
-            user.hotelid="hotelid";
-            user.language="language";
+            user.name=$('#username').val();
+            user.pwd=$('#pwd').val();
+            user.hotelid=$('#hotelid').val();
+            user.language=$('#language').val();
+            user.openid=$('#openid').text();
             $.get("/submitRegist", user,
                     function(data){
                         _success();
@@ -79,7 +83,8 @@
 <body style="height:100%" >
 
 <div class="page input js_show" style="margin: 0px 15px;">
-
+<span id="registed" style="display:none"><%=(String)request.getAttribute("registed")%></span>
+<span id="openid" style="display:none"><%=(String)request.getAttribute("openid")%></span>
     <div class="page__bd" >
         <div class="weui-cells weui-cells_form">
 
@@ -92,13 +97,13 @@
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">Password</label></div>
                 <div class="weui-cell__bd my-background-color">
-                    <input class="weui-input" type="password" pattern="*" placeholder="please input password">
+                    <input class="weui-input" type="password" id="pwd" pattern="*" placeholder="please input password">
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd"><label class="weui-label">Hotel ID</label></div>
                 <div class="weui-cell__bd my-background-color">
-                    <input class="weui-input" type="text"  placeholder="please input hotelname">
+                    <input class="weui-input" type="text" id="hotelid"  placeholder="please input hotelId">
                 </div>
             </div>
             <div class="weui-cell weui-cell_select weui-cell_select-after" style="padding-right: 15px;">
@@ -106,9 +111,9 @@
                     <label  class="weui-label">Language</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <select class="weui-input my-background-color" style="margin: 10px 0px;" name="select2">
-                        <option value="1">Chinese</option>
-                        <option value="2">English</option>
+                    <select class="weui-input my-background-color" id="language" style="margin: 10px 0px;" name="select2">
+                        <option value="Chinese">Chinese</option>
+                        <option value="English">English</option>
                     </select>
                 </div>
             </div>

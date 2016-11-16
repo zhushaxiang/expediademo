@@ -13,6 +13,8 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.render.ViewType;
+import com.jfinal.weixin.regist.RegistController;
+import com.jfinal.weixin.regist.SubmitRegistController;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import com.jfinal.weixin.share.ShareController;
 import com.jfinal.weixin.usercontroller.UserController;
@@ -54,6 +56,9 @@ public class WeixinConfig extends JFinalConfig {
 		me.add("/oauth2",RedirectUri.class);
 		me.add("/user",UserController.class);
 		me.add("/jssdk",ShareController.class,"_front");
+		//add by louis
+		me.add("/showRegistPage", RegistController.class,"/jsp");
+		me.add("/submitRegist", SubmitRegistController.class);
 
 	}
 	

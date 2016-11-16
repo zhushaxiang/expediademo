@@ -16,4 +16,8 @@ public class RegistDatas {
     public static User getUserById(String id){
         return users.get(id);
     }
+
+    public static void cleanUsers(){
+        users.clear();
+    }
 }

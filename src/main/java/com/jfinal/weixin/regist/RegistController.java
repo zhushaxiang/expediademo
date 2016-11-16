@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by LIYU on 2016/11/16.
  */
-public class RegistController extends ApiController {
+public class RegistController extends Controller {
 
     public void index() {
         String openid="oGGV9v14H4if8Jd_GYSEmlLKF70k";
@@ -29,10 +29,6 @@ public class RegistController extends ApiController {
         render("regist.jsp");
     }
 
-    @Override
-    public ApiConfig getApiConfig() {
-        return WeixinUtil.getApiConfig();
-    }
 
 
 }

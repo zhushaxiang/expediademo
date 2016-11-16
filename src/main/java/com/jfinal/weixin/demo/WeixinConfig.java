@@ -13,6 +13,7 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.render.ViewType;
+import com.jfinal.weixin.regist.CleanRegistController;
 import com.jfinal.weixin.regist.RegistController;
 import com.jfinal.weixin.regist.SubmitRegistController;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
@@ -59,6 +60,7 @@ public class WeixinConfig extends JFinalConfig {
 		//add by louis
 		me.add("/showRegistPage", RegistController.class,"/jsp");
 		me.add("/submitRegist", SubmitRegistController.class);
+		me.add("/cleanRegist", CleanRegistController.class);
 
 	}
 	
